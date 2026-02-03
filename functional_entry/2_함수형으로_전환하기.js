@@ -1,4 +1,4 @@
-import {_curry, _curryr, _each, _filter, _get, _go, _map, _pipe} from "./js/_js.js";
+import {_curry, _curryr, _each, _filter, _get, _go, _map, _pipe} from "../js/_js.js";
 
 var users = [
     { id: 1, name: 'ID', age: 36 },

@@ -1,5 +1,5 @@
 // 기준 데이터
-import {_curryr, _filter, _map} from "./js/_js";
+import {_curryr, _filter, _map} from "../js/_js";
 
 var users = [
     { id: 10, name: 'ID', age: 36 },
