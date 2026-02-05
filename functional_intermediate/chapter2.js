@@ -43,3 +43,21 @@ for (const a of map) log(a);
 *  - 이터러블/이터레이터 프로토콜: 이터러블을 for...of, 전개 연산자 등과 함께 동작하도록한 규약
 *  결론 for...of로 나오는 결과 값은 arr, set, map이 아니라 이터러블 객체임
 *  */
+
+/*
+* Well-formed iterator
+* 자기자신의 iterator를 반환함
+* 이전까지 진행된 상태에서 계속해서 Next를 할 수 있음
+* */
+
+const iterable = {
+    [Symbol.iterator]() {
+        let i = 3;
+        return{
+            next() {
+                return i == 0 ? { done: true } : { value: i--, done: false };
+            },
+            [Symbol.iterator]() { return this; }
+        }
+    }
+}
