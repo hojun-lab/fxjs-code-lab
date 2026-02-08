@@ -100,3 +100,17 @@ const reduce = (f, acc, iter) => {
 
 const add = (a, b) => a + b;
 log(reduce(add, 0, [1, 2, 3, 4, 5]));
+
+// map + filter + reduce
+const add = (a, b) => a + b;
+log(
+    reduce(
+        add,
+        map(p => p.price,
+            filter(p => p.price < 2000, products))));
+
+log(
+    reduce(
+        add,
+        filter(p => n >= 20000,
+            map(p => p.price, products))));
