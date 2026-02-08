@@ -8,4 +8,43 @@ const products = [
     { name: '바지', price: 25000 },
 ]
 
+const reduce = (f, acc, iter) => {
+    if (!iter) {
+        iter = acc[Symbol.iterator]();
+        acc = iter.next().value;
+    }
+    for (const item of iter) {
+        acc = f(acc, item);
+    }
+    return acc;
+}
+
 // 코드를 값으로 다루어 표현력 높이기
+
+const go = (...args) => reduce((a, f) => f(a), args);
+const pipe = (f, ...fs) => (...as) => go(f(...as), ...fs);
+
+go(
+    0,
+    a => a + 1,
+    a => a + 10,
+    a => a + 100,
+    log
+);
+// result = 111
+
+const f = pipe(
+    a => a + 1,
+    a => a + 10,
+    a => a + 100
+);
+
+log(f(0));
+
+go(
+    products,
+    products => filter(p => p.price < 20000, products),
+    products => map(p => p.price, products),
+    prices => reduce(add, prices),
+    log
+);
