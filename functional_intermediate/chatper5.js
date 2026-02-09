@@ -8,7 +8,26 @@ const products = [
     { name: '바지', price: 25000 },
 ]
 
-const reduce = (f, acc, iter) => {
+const curry = f =>
+    (a, ..._) => _.length ? f(a, ..._) : (..._) => f(a, ..._);
+
+const map = curry((f, iter) => {
+    let res = [];
+    for (const item of iter) {
+        res.push(f(item));
+    }
+    return res;
+});
+
+const filter = curry((f, iter) => {
+    let res = [];
+    for (const item of iter) {
+        if (f(item)) res.push(item);
+    }
+    return res;
+});
+
+const reduce = curry((f, acc, iter) => {
     if (!iter) {
         iter = acc[Symbol.iterator]();
         acc = iter.next().value;
@@ -17,7 +36,7 @@ const reduce = (f, acc, iter) => {
         acc = f(acc, item);
     }
     return acc;
-}
+});
 
 // 코드를 값으로 다루어 표현력 높이기
 
@@ -41,10 +60,32 @@ const f = pipe(
 
 log(f(0));
 
+const total_price = pipe(
+    map(p => p.price),
+    reduce(add),
+);
+
+const base_total_price = predi => pipe(
+    filter(predi),
+    total_price()
+)
+
 go(
     products,
-    products => filter(p => p.price < 20000, products),
-    products => map(p => p.price, products),
-    prices => reduce(add, prices),
+    base_total_price(p => p.price < 20000),
     log
 );
+
+go(
+    products,
+    base_total_price(p => p.price < 20000),
+    log
+);
+
+const mult = curry((a, b) => a * b);
+log(mult(3)(2));
+
+const mult3 = mult(3);
+log(mult3(10));
+log(mult3(5));
+log(mult3(2));
