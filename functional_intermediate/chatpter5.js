@@ -60,6 +60,8 @@ const f = pipe(
 
 log(f(0));
 
+const add = (a, b) => a + b;
+
 const total_price = pipe(
     map(p => p.price),
     reduce(add),
