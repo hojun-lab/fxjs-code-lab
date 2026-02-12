@@ -75,3 +75,45 @@ test('range', 10, () => reduce(add, range(10000000)));
 // 489.10ms
 test('range', 10, () => reduce(add, L.range(10000000)));
 // 295.78ms
+
+log("take() 실행")
+const take = curry((l, iter) => {
+    let res = [];
+    for (const item of iter) {
+        res.push(item);
+        if (res.length === l) return res;
+    }
+    return res;
+});
+
+go(
+    range(10000),
+    take(5),
+    reduce(add),
+    log
+)
+
+take(5, range(100));
+take(5, L.range(100));  // 지연성을 가진 함수 => iterable 프로토콜로 추후에 리턴 가능함
+
+// Iterable은 Java에서 Stream같은 역할
+
+// 지연 평가에 대한 자세한 설명
+// 1. 지연 평가는 영리한 계산 법 = 가장 필요한 때 까지 평가를 미룸 -> 필요할 때 사용 = 메모리 효율적
+// 2. 이터레이터와 제너레이터, 이터러블 프로토콜이 있어서 지연평가가 쉬워짐
+
+log('L.map - 평가를 미뤄서, 평가 순서를 달리 할 수 있는 이터레이터를 반환하는 제너레이터');
+
+L.map = function *(f, iter) {
+    for (const iterElement of iter) yield f(iterElement);
+};
+
+var item = L.map(a => a + 10, [1, 2, 3]);
+item.next();
+
+log('L.filter - 평가를 미뤄서, 평가 순서를 달리 할 수 있는 이터레이터를 반환하는 제너레이터');
+
+L.filter = function *(f, iter) {
+    for (const iterElement of iter) if (f(iterElement)) yield iterElement;
+}
+var filteredItem = L.filter(a => a % 2, [1, 2, 3, 4]);
