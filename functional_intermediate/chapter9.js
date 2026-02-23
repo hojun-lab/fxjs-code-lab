@@ -34,4 +34,13 @@ log(b)
 
 // a는 실횅 후 더 이상 할 수 있는 작업이 없음
 // b는 실행 후 다른 작업을 then 을 통해서 가능
+const delay100 = a => new Promise(resolve => setTimeout(() => resolve(a), 100));
 
+const go1 = (a, f) => a instanceof Promise ? a.then(f) : f(a);
+const add5 = a => a + 5;
+
+// log(go1(10, add5));
+// log(go1(delay100(10), add5));
+
+go1(go1(10, add5), log);
+go1(go1(delay100(10), add5), log);
